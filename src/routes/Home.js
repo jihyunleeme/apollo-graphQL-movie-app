@@ -37,9 +37,18 @@ const Loading = styled.div`
   margin-top: 10px;
 `;
 
+const Movies = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 25px;
+  width: 60%;
+  position: relative;
+  top: -50px;
+`;
+
 const GET_MOVIES = gql`
 {
-  Movies(limit: 10){
+  Movies(limit: 10) {
    id
   }
 }
@@ -55,16 +64,20 @@ const Home = () => {
       <Subtitle>I love GraphQL</Subtitle>
     </Header>
     {loading && <Loading> Loading ... </Loading>} {/* if loading, show <loading></loading> */}
-    {!loading && data.Movies && data.Movies.map(
-      movie => {  
-        return (
+    {!loading && data.Movies && (<Movies>
+      (data.Movies.map(movie => (
           <Movie 
             key={movie.id}
-            id={movie.id} 
-          ></Movie>
-        )
-      }
-    )}
+            id={movie.id}>
+          </Movie>)
+      ))</Movies>}
+      {!loading && data.movies && (
+        <Movies>
+          {data.movies.map(m => (
+            <Movie key={m.id} id={m.id} bg={m.medium_cover_image} />
+          ))}
+        </Movies>
+      )}
   </Container>
   );
 };
