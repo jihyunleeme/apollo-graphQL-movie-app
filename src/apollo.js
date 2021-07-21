@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache} from "@apollo/client";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 const client = new ApolloClient({
   uri: 'http://apollo-movie-server.herokuapp.com/', // specifies the URL of our GraphQl server
