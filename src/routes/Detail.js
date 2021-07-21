@@ -1,6 +1,19 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import styled from 'styled-components';
+
+const GET_MOVIE = gql`
+  query getMovie($id: Int!) { 
+    Movie(id : $id) {
+      title
+      medium_cover_image
+      language
+      rating
+      description_intro
+    }
+  }
+`;
 
 const Container = styled.div`
   height: 100vh;
@@ -36,36 +49,21 @@ const Poster = styled.div`
   background-color: transparent;
 `;
 
-const GET_MOVIE = gql`
-  query getMovie($id: Int!) { 
-    Movie(id : $id){
-    title
-    medium_cover_image
-    language
-    rating
-    description_intro
-    }
-  }
-`;
-
 const Detail = () => {
-  const { id } = useParams();
-  const {loading, data} = useQuery(GET_MOVIE, {
-    variables: { id }
+  let { id } = useParams();
+  const { loading, data } = useQuery(GET_MOVIE, {
+    variables: { id: +id },
   });
-  console.log(loading, data)
-
-  if (loading) {return "loading";}
-  if (data && data.movie) {return data.movie.title;}
-  
+  console.log('loading = ', loading, "data = ", data)
   return (
     <Container>
       <Column>
-        <Title>Name</Title>
-        <Subtitle>English * 4.3</Subtitle>
-        <Description>hello everyone. Nice to meet you!</Description>
+        <Title>{loading ? "Loading..." : data.Movie.title}</Title>
+        {!loading && (console.log(data)) && data.Movie &&
+          (<><Subtitle>{data.Movie.language} * {data.Movie.rating}</Subtitle>
+            <Description>{data.Movie.description_intro}</Description></>)}
       </Column>
-      <Poster></Poster>
+      <Poster bg={data && data.Movie ? data.Movie.medium_cover_image : ""}></Poster>
     </Container>
   )
 };
